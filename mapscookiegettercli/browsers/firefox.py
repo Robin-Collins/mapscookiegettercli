@@ -59,9 +59,19 @@ class Firefox:  # pylint: disable=too-few-public-methods
                                                 suffix='bootstrapper')
         logger = logging.getLogger(logger_name)
         logger.info('Starting up firefox driven by selenium')
-        driver = webdriver.Firefox(firefox_profile=webdriver.FirefoxProfile(),
+        profile = webdriver.FirefoxProfile(
+    '/home/tech/.mozilla/firefox/byyo3zwg.default-release')
+
+        profile.set_preference("dom.webdriver.enabled", False)
+        profile.set_preference('useAutomationExtension', False)
+        profile.update_preferences()
+        desired = DesiredCapabilities.FIREFOX
+
+driver = webdriver.Firefox(firefox_profile=profile,
+                           desired_capabilities=desired)
+        driver = webdriver.Firefox(firefox_profile=profile,desired_capabilities=desired,
                                    executable_path=GeckoDriverManager().install())
         logger.info('Deleting all cookies')
-        driver.delete_all_cookies()
+        # driver.delete_all_cookies()
         logger.info('Returning driver')
         return driver
